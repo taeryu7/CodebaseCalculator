@@ -285,9 +285,6 @@ class ViewController: UIViewController {
     
     // MARK: - Operator Actions
     /// 연산자 버튼 액션 메서드들
-    // 기존 코드에서 연산자 관련 메서드만 수정합니다.
-
-    // MARK: - Helper Methods
     /// 마지막 문자가 연산자인지 확인하는 메서드
     private func isLastCharacterOperator() -> Bool {
         let operators = ["+", "-", "*", "/"]
