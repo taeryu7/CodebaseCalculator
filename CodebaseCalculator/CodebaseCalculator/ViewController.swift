@@ -10,54 +10,64 @@ import SnapKit
 
 class ViewController: UIViewController {
     
-    //임의로 지정한 숫자값
+    // MARK: - Properties
+    /// 계산기에 표시되는 현재 숫자 또는 수식을 저장하는 변수
     private var firstNumber = "0"
-    
-    // 상단 숫자 라벨
+    /// 새로운 계산 시작 여부를 판단하는 플래그
+    private var isNewCalculation = false
+
+    // MARK: - UI Components
+    /// 계산 결과를 표시하는 레이블
     let label = UILabel()
     
-    // 첫번째 줄
-    let plusButton = UIButton()
-    let sevenButton = UIButton()
-    let eightButton = UIButton()
-    let nineButton = UIButton()
-    let stackView = UIStackView()
+    // 첫번째 줄 버튼들
+    let plusButton = UIButton()    // 더하기 연산자
+    let sevenButton = UIButton()   // 숫자 7
+    let eightButton = UIButton()   // 숫자 8
+    let nineButton = UIButton()    // 숫자 9
+    let stackView = UIStackView()  // 첫번째 줄 스택뷰
     
-    // 두번째 줄
-    let fourButton = UIButton()
-    let fiveButton = UIButton()
-    let sixButton = UIButton()
-    let minusButton = UIButton()
-    let stackView1 = UIStackView()
+    // 두번째 줄 버튼들
+    let fourButton = UIButton()    // 숫자 4
+    let fiveButton = UIButton()    // 숫자 5
+    let sixButton = UIButton()     // 숫자 6
+    let minusButton = UIButton()   // 빼기 연산자
+    let stackView1 = UIStackView() // 두번째 줄 스택뷰
     
-    // 세번째 줄
-    let oneButton = UIButton()
-    let twoButton = UIButton()
-    let threeButton = UIButton()
-    let multplyButton = UIButton()
-    let stackView2 = UIStackView()
+    // 세번째 줄 버튼들
+    let oneButton = UIButton()     // 숫자 1
+    let twoButton = UIButton()     // 숫자 2
+    let threeButton = UIButton()   // 숫자 3
+    let multplyButton = UIButton() // 곱하기 연산자
+    let stackView2 = UIStackView() // 세번째 줄 스택뷰
     
-    // 네번째 줄
-    let resetButton = UIButton()
-    let zeroButton = UIButton()
-    let equalButton = UIButton()
-    let dividButton = UIButton()
-    let stackView3 = UIStackView()
-
+    // 네번째 줄 버튼들
+    let resetButton = UIButton()   // 초기화(AC) 버튼
+    let zeroButton = UIButton()    // 숫자 0
+    let equalButton = UIButton()   // 등호(계산) 버튼
+    let dividButton = UIButton()   // 나누기 연산자
+    let stackView3 = UIStackView() // 네번째 줄 스택뷰
+    
+    // MARK: - Lifecycle Methods
     override func viewDidLoad() {
         super.viewDidLoad()
         calculatorUI()
-        // Do any additional setup after loading the view.
     }
     
+    // MARK: - UI Setup Methods
+    /// 계산기의 전체적인 UI를 설정하는 메서드
     private func calculatorUI() {
+        // 배경색 설정
         view.backgroundColor = .black
         
         // 레이블 설정
         label.text = "\(firstNumber)"
         label.textColor = .white
-        label.font = .boldSystemFont(ofSize: 60)    // 폰트 : 볼드, 60pt
+        label.font = .boldSystemFont(ofSize: 60)
         label.textAlignment = .right
+        label.numberOfLines = 1               // 한 줄로 표시
+        label.adjustsFontSizeToFitWidth = true // 글자 크기 자동 조절
+        label.minimumScaleFactor = 0.5        // 최소 글자 크기는 원본의 50%까지
         
         // 버튼 설정
         colorButton(button: plusButton, title: "+")
@@ -82,15 +92,6 @@ class ViewController: UIViewController {
         setupButton(button: zeroButton, title: "0")
         colorButton(button: equalButton, title: "=")
         colorButton(button: dividButton, title: "/")
-
-        // 1.스택뷰 설정
-        stackView.axis = .horizontal
-        stackView.spacing = 10
-        stackView.distribution = .fillEqually
-        stackView.addArrangedSubview(sevenButton)
-        stackView.addArrangedSubview(eightButton)
-        stackView.addArrangedSubview(nineButton)
-        stackView.addArrangedSubview(plusButton)
         
         // 1.스택뷰 설정
         stackView.axis = .horizontal
@@ -100,7 +101,7 @@ class ViewController: UIViewController {
         stackView.addArrangedSubview(eightButton)
         stackView.addArrangedSubview(nineButton)
         stackView.addArrangedSubview(plusButton)
-       
+        
         // 2.스택뷰 설정
         stackView1.axis = .horizontal
         stackView1.spacing = 10
@@ -109,7 +110,7 @@ class ViewController: UIViewController {
         stackView1.addArrangedSubview(fiveButton)
         stackView1.addArrangedSubview(sixButton)
         stackView1.addArrangedSubview(minusButton)
-       
+        
         // 3.스택뷰 설정
         stackView2.axis = .horizontal
         stackView2.spacing = 10
@@ -118,7 +119,7 @@ class ViewController: UIViewController {
         stackView2.addArrangedSubview(twoButton)
         stackView2.addArrangedSubview(threeButton)
         stackView2.addArrangedSubview(multplyButton)
-       
+        
         //4. 스택뷰 설정
         stackView3.axis = .horizontal
         stackView3.spacing = 10
@@ -128,7 +129,7 @@ class ViewController: UIViewController {
         stackView3.addArrangedSubview(equalButton)
         stackView3.addArrangedSubview(dividButton)
         
-        //숫자버튼 액션
+        // 숫자버튼 액션 설정
         resetButton.addTarget(self, action: #selector(resetButtonTapped), for: .touchDown)
         oneButton.addTarget(self, action: #selector(oneButtonTapped), for: .touchDown)
         twoButton.addTarget(self, action: #selector(twoButtonTapped), for: .touchDown)
@@ -141,21 +142,21 @@ class ViewController: UIViewController {
         nineButton.addTarget(self, action: #selector(nineButtonTapped), for: .touchDown)
         zeroButton.addTarget(self, action: #selector(zeroButtonTapped), for: .touchDown)
         
-        //연산자 액션
+        // 연산자 액션 설정
         plusButton.addTarget(self, action: #selector(plusButtonTapped), for: .touchDown)
         minusButton.addTarget(self, action: #selector(minusButtonTapped), for: .touchDown)
         multplyButton.addTarget(self, action: #selector(multplyButtonTapped), for: .touchDown)
         dividButton.addTarget(self, action: #selector(dividButtonTapped), for: .touchDown)
-
+        equalButton.addTarget(self, action: #selector(equalButtonTapped), for: .touchDown)
         
-        // 뷰 추가 필수로 해야함.
+        // 뷰 추가
         view.addSubview(label)
         view.addSubview(stackView)
         view.addSubview(stackView1)
         view.addSubview(stackView2)
         view.addSubview(stackView3)
         
-        // 제약 조건 설정
+        // 제약조건 설정
         label.snp.makeConstraints {
             $0.height.equalTo(100)
             $0.leading.equalToSuperview().offset(30)
@@ -164,36 +165,35 @@ class ViewController: UIViewController {
         }
         
         stackView.snp.makeConstraints {
-             $0.top.equalTo(label.snp.bottom).offset(60)
-             $0.leading.equalToSuperview().offset(30)
-             $0.trailing.equalToSuperview().offset(-30)
-             $0.height.equalTo(80)
-         }
+            $0.top.equalTo(label.snp.bottom).offset(60)
+            $0.leading.equalToSuperview().offset(30)
+            $0.trailing.equalToSuperview().offset(-30)
+            $0.height.equalTo(80)
+        }
         
-         stackView1.snp.makeConstraints {
-             $0.top.equalTo(stackView.snp.bottom).offset(10)
-             $0.leading.equalToSuperview().offset(30)
-             $0.trailing.equalToSuperview().offset(-30)
-             $0.height.equalTo(80)
-         }
+        stackView1.snp.makeConstraints {
+            $0.top.equalTo(stackView.snp.bottom).offset(10)
+            $0.leading.equalToSuperview().offset(30)
+            $0.trailing.equalToSuperview().offset(-30)
+            $0.height.equalTo(80)
+        }
         
-         stackView2.snp.makeConstraints {
-             $0.top.equalTo(stackView1.snp.bottom).offset(10)
-             $0.leading.equalToSuperview().offset(30)
-             $0.trailing.equalToSuperview().offset(-30)
-             $0.height.equalTo(80)
-         }
+        stackView2.snp.makeConstraints {
+            $0.top.equalTo(stackView1.snp.bottom).offset(10)
+            $0.leading.equalToSuperview().offset(30)
+            $0.trailing.equalToSuperview().offset(-30)
+            $0.height.equalTo(80)
+        }
         
-         stackView3.snp.makeConstraints {
-             $0.top.equalTo(stackView2.snp.bottom).offset(10)
-             $0.leading.equalToSuperview().offset(30)
-             $0.trailing.equalToSuperview().offset(-30)
-             $0.height.equalTo(80)
-         }
-        
+        stackView3.snp.makeConstraints {
+            $0.top.equalTo(stackView2.snp.bottom).offset(10)
+            $0.leading.equalToSuperview().offset(30)
+            $0.trailing.equalToSuperview().offset(-30)
+            $0.height.equalTo(80)
+        }
     }
     
-    // 숫자 버튼 설정
+    /// 숫자 버튼의 공통 UI를 설정하는 메서드
     private func setupButton(button: UIButton, title: String) {
         button.setTitle(title, for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 30)
@@ -202,7 +202,7 @@ class ViewController: UIViewController {
         button.layer.cornerRadius = 40
     }
     
-    // 연산자 버튼 설정
+    /// 연산자 버튼의 공통 UI를 설정하는 메서드
     private func colorButton(button: UIButton, title: String) {
         button.setTitle(title, for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 30)
@@ -211,186 +211,178 @@ class ViewController: UIViewController {
         button.layer.cornerRadius = 40
     }
     
-    // 액션 함수
+    // MARK: - Helper Methods
+    /// 숫자 버튼 입력을 처리하는 공통 메서드
+    private func handleNumberInput(_ number: String) {
+        if firstNumber == "0" || isNewCalculation {
+            firstNumber = number            // 새로운 숫자로 대체
+            isNewCalculation = false        // 계산 진행 중 상태로 변경
+        } else {
+            firstNumber += number           // 기존 숫자에 이어붙이기
+        }
+        label.text = "\(firstNumber)"      // 화면 업데이트
+    }
+    
+    // MARK: - Button Actions
     // 초기화 버튼
     @objc
     private func resetButtonTapped() {
-        firstNumber = "0"
-        label.text = "\(firstNumber)"
+        firstNumber = "0"              // 숫자 초기화
+        isNewCalculation = false       // 계산 상태 초기화
+        label.text = "\(firstNumber)"  // 화면 업데이트
     }
-    
-    // 1버튼 액션
+   
+    /// 숫자 버튼 액션 메서드들
     @objc
-    private func oneButtonTapped () {
-        if firstNumber == "0" {
-            firstNumber = "1"
-            label.text = "\(firstNumber)"
-        } else {
-            firstNumber += "1"
-            label.text = "\(firstNumber)"
-        }
+    private func oneButtonTapped() {
+        handleNumberInput("1")
     }
     
-    // 2버튼 액션
     @objc
     private func twoButtonTapped() {
-        if firstNumber == "0" {
-            firstNumber = "2"
-            label.text = "\(firstNumber)"
-        } else {
-            firstNumber += "2"
-            label.text = "\(firstNumber)"
-        }
+        handleNumberInput("2")
     }
     
-    // 3버튼 액션
     @objc
     private func threeButtonTapped() {
-        if firstNumber == "0" {
-            firstNumber = "3"
-            label.text = "\(firstNumber)"
-        } else {
-            firstNumber += "3"
-            label.text = "\(firstNumber)"
-        }
+        handleNumberInput("3")
     }
     
-    // 4버튼 액션
     @objc
     private func fourButtonTapped() {
-        if firstNumber == "0" {
-            firstNumber = "4"
-            label.text = "\(firstNumber)"
-        } else {
-            firstNumber += "4"
-            label.text = "\(firstNumber)"
-        }
+        handleNumberInput("4")
     }
     
-    //5버튼 액션
     @objc
     private func fiveButtonTapped() {
-        if firstNumber == "0" {
-            firstNumber = "5"
-            label.text = "\(firstNumber)"
-        } else {
-            firstNumber += "5"
-            label.text = "\(firstNumber)"
-        }
+        handleNumberInput("5")
     }
     
-    // 6버튼 액션
     @objc
     private func sixButtonTapped() {
-        if firstNumber == "0" {
-            firstNumber = "6"
-            label.text = "\(firstNumber)"
-        } else {
-            firstNumber += "6"
-            label.text = "\(firstNumber)"
-        }
+        handleNumberInput("6")
     }
     
-    // 7버튼 액션
     @objc
     private func sevenButtonTapped() {
-        if firstNumber == "0" {
-            firstNumber = "7"
-            label.text = "\(firstNumber)"
-        } else {
-            firstNumber += "7"
-            label.text = "\(firstNumber)"
-        }
+        handleNumberInput("7")
     }
     
-    // 8버튼 액션
     @objc
     private func eightButtonTapped() {
-        if firstNumber == "0" {
-            firstNumber = "8"
-            label.text = "\(firstNumber)"
-        } else {
-            firstNumber += "8"
-            label.text = "\(firstNumber)"
-        }
+        handleNumberInput("8")
     }
     
-    // 9버튼 액션
     @objc
     private func nineButtonTapped() {
-        if firstNumber == "0" {
-            firstNumber = "9"
-            label.text = "\(firstNumber)"
-        } else {
-            firstNumber += "9"
-            label.text = "\(firstNumber)"
-        }
+        handleNumberInput("9")
     }
     
-    // 0버튼 액션
     @objc
     private func zeroButtonTapped() {
-        if firstNumber == "0" {
-            firstNumber = "0"
-            label.text = "\(firstNumber)"
-        } else {
-            firstNumber += "0"
-            label.text = "\(firstNumber)"
-        }
+        handleNumberInput("0")
     }
     
-    // 덧셈 버튼
+    // MARK: - Operator Actions
+    /// 연산자 버튼 액션 메서드들
+    // 기존 코드에서 연산자 관련 메서드만 수정합니다.
+
+    // MARK: - Helper Methods
+    /// 마지막 문자가 연산자인지 확인하는 메서드
+    private func isLastCharacterOperator() -> Bool {
+        let operators = ["+", "-", "*", "/"]
+        guard let lastChar = firstNumber.last.map(String.init) else { return false }
+        return operators.contains(lastChar)
+    }
+
+    // MARK: - Operator Actions
+    /// 연산자 버튼 액션 메서드들
     @objc
     private func plusButtonTapped() {
         if firstNumber == "0" {
             firstNumber = "+"
             label.text = "error"
+        } else if isLastCharacterOperator() {
+            label.text = "error"  // 연산자가 연속으로 입력된 경우
         } else {
             firstNumber += "+"
             label.text = "\(firstNumber)"
+            isNewCalculation = false
         }
     }
     
-    // 뺄셈 버튼
     @objc
     private func minusButtonTapped() {
         if firstNumber == "0" {
             firstNumber = "-"
             label.text = "\(firstNumber)"
+        } else if isLastCharacterOperator() {
+            label.text = "error"  // 연산자가 연속으로 입력된 경우
         } else {
             firstNumber += "-"
             label.text = "\(firstNumber)"
+            isNewCalculation = false
         }
     }
     
-    // 곱셈 버튼
     @objc
     private func multplyButtonTapped() {
         if firstNumber == "0" {
             firstNumber = "*"
             label.text = "error"
+        } else if isLastCharacterOperator() {
+            label.text = "error"  // 연산자가 연속으로 입력된 경우
         } else {
             firstNumber += "*"
             label.text = "\(firstNumber)"
+            isNewCalculation = false
         }
     }
     
-    // 나눗셈 버튼
     @objc
     private func dividButtonTapped() {
         if firstNumber == "0" {
             firstNumber = "/"
             label.text = "error"
+        } else if isLastCharacterOperator() {
+            label.text = "error"  // 연산자가 연속으로 입력된 경우
         } else {
             firstNumber += "/"
             label.text = "\(firstNumber)"
+            isNewCalculation = false
         }
     }
     
-
+    /// 계산 실행 버튼
+    @objc
+    private func equalButtonTapped() {
+        if firstNumber == "0" {
+            label.text = "error"
+        } else if isLastCharacterOperator() {  // 마지막 문자가 연산자인 경우 체크
+            label.text = "error"
+        } else {
+            if let result = calculate(expression: firstNumber) {
+                label.text = "\(result)"
+                firstNumber = "\(result)"
+                isNewCalculation = true  // 새로운 계산 시작을 위한 플래그 설정
+            } else {
+                label.text = "error"
+            }
+        }
+    }
+    
+    /// 수식을 계산하는 메서드
+    private func calculate(expression: String) -> Int? {
+        let expression = NSExpression(format: expression)
+        if let result = expression.expressionValue(with: nil, context: nil) as? Int {
+            return result
+        } else {
+            return 0
+        }
+    }
 }
 
-// 프리뷰
+// MARK: - Preview Provider
 #Preview {
-  ViewController()
+    ViewController()
 }
