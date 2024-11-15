@@ -22,12 +22,14 @@ class ViewController: UIViewController {
     let eightButton = UIButton()
     let nineButton = UIButton()
     let stackView = UIStackView()
+    
     // 두번째 줄
     let fourButton = UIButton()
     let fiveButton = UIButton()
     let sixButton = UIButton()
     let minusButton = UIButton()
     let stackView1 = UIStackView()
+    
     // 세번째 줄
     let oneButton = UIButton()
     let twoButton = UIButton()
@@ -58,7 +60,7 @@ class ViewController: UIViewController {
         label.textAlignment = .right
         
         // 버튼 설정
-        setupButton(button: plusButton, title: "+")
+        colorButton(button: plusButton, title: "+")
         setupButton(button: sevenButton, title: "7")
         setupButton(button: eightButton, title: "8")
         setupButton(button: nineButton, title: "9")
@@ -67,19 +69,19 @@ class ViewController: UIViewController {
         setupButton(button: fourButton, title: "4")
         setupButton(button: fiveButton, title: "5")
         setupButton(button: sixButton, title: "6")
-        setupButton(button: minusButton, title: "-")
+        colorButton(button: minusButton, title: "-")
         
         //세번째 버튼 설정
         setupButton(button: oneButton, title: "1")
         setupButton(button: twoButton, title: "2")
         setupButton(button: threeButton, title: "3")
-        setupButton(button: multplyButton, title: "*")
+        colorButton(button: multplyButton, title: "*")
         
         //네번째 버튼 설정
-        setupButton(button: resetButton, title: "AC")
+        colorButton(button: resetButton, title: "AC")
         setupButton(button: zeroButton, title: "0")
-        setupButton(button: equalButton, title: "=")
-        setupButton(button: dividButton, title: "/")
+        colorButton(button: equalButton, title: "=")
+        colorButton(button: dividButton, title: "/")
 
         // 1.스택뷰 설정
         stackView.axis = .horizontal
@@ -170,11 +172,20 @@ class ViewController: UIViewController {
          }
         
     }
+    
     //숫자 버튼 설정
     private func setupButton(button: UIButton, title: String) {
         button.setTitle(title, for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 30)
         button.backgroundColor = UIColor(red: 58/255, green: 58/255, blue: 58/255, alpha: 1.0)
+        button.setTitleColor(.white, for: .normal)
+    }
+    
+    // 연산자 버튼 설정
+    private func colorButton(button: UIButton, title: String) {
+        button.setTitle(title, for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 30)
+        button.backgroundColor = UIColor(red: 255/255, green: 147/255, blue: 0/255, alpha: 1.0)
         button.setTitleColor(.white, for: .normal)
     }
 
