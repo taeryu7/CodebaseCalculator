@@ -11,7 +11,7 @@ import SnapKit
 class ViewController: UIViewController {
     
     //임의로 지정한 숫자값
-    private var firstNumber = "12345"
+    private var firstNumber = "0"
     
     // 상단 숫자 라벨
     let label = UILabel()
@@ -128,6 +128,26 @@ class ViewController: UIViewController {
         stackView3.addArrangedSubview(equalButton)
         stackView3.addArrangedSubview(dividButton)
         
+        //숫자버튼 액션
+        resetButton.addTarget(self, action: #selector(resetButtonTapped), for: .touchDown)
+        oneButton.addTarget(self, action: #selector(oneButtonTapped), for: .touchDown)
+        twoButton.addTarget(self, action: #selector(twoButtonTapped), for: .touchDown)
+        threeButton.addTarget(self, action: #selector(threeButtonTapped), for: .touchDown)
+        fourButton.addTarget(self, action: #selector(fourButtonTapped), for: .touchDown)
+        fiveButton.addTarget(self, action: #selector(fiveButtonTapped), for: .touchDown)
+        sixButton.addTarget(self, action: #selector(sixButtonTapped), for: .touchDown)
+        sevenButton.addTarget(self, action: #selector(sevenButtonTapped), for: .touchDown)
+        eightButton.addTarget(self, action: #selector(eightButtonTapped), for: .touchDown)
+        nineButton.addTarget(self, action: #selector(nineButtonTapped), for: .touchDown)
+        zeroButton.addTarget(self, action: #selector(zeroButtonTapped), for: .touchDown)
+        
+        //연산자 액션
+        plusButton.addTarget(self, action: #selector(plusButtonTapped), for: .touchDown)
+        minusButton.addTarget(self, action: #selector(minusButtonTapped), for: .touchDown)
+        multplyButton.addTarget(self, action: #selector(multplyButtonTapped), for: .touchDown)
+        dividButton.addTarget(self, action: #selector(dividButtonTapped), for: .touchDown)
+
+        
         // 뷰 추가 필수로 해야함.
         view.addSubview(label)
         view.addSubview(stackView)
@@ -173,7 +193,7 @@ class ViewController: UIViewController {
         
     }
     
-    //숫자 버튼 설정
+    // 숫자 버튼 설정
     private func setupButton(button: UIButton, title: String) {
         button.setTitle(title, for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 30)
@@ -190,9 +210,187 @@ class ViewController: UIViewController {
         button.setTitleColor(.white, for: .normal)
         button.layer.cornerRadius = 40
     }
+    
+    // 액션 함수
+    // 초기화 버튼
+    @objc
+    private func resetButtonTapped() {
+        firstNumber = "0"
+        label.text = "\(firstNumber)"
+    }
+    
+    // 1버튼 액션
+    @objc
+    private func oneButtonTapped () {
+        if firstNumber == "0" {
+            firstNumber = "1"
+            label.text = "\(firstNumber)"
+        } else {
+            firstNumber += "1"
+            label.text = "\(firstNumber)"
+        }
+    }
+    
+    // 2버튼 액션
+    @objc
+    private func twoButtonTapped() {
+        if firstNumber == "0" {
+            firstNumber = "2"
+            label.text = "\(firstNumber)"
+        } else {
+            firstNumber += "2"
+            label.text = "\(firstNumber)"
+        }
+    }
+    
+    // 3버튼 액션
+    @objc
+    private func threeButtonTapped() {
+        if firstNumber == "0" {
+            firstNumber = "3"
+            label.text = "\(firstNumber)"
+        } else {
+            firstNumber += "3"
+            label.text = "\(firstNumber)"
+        }
+    }
+    
+    // 4버튼 액션
+    @objc
+    private func fourButtonTapped() {
+        if firstNumber == "0" {
+            firstNumber = "4"
+            label.text = "\(firstNumber)"
+        } else {
+            firstNumber += "4"
+            label.text = "\(firstNumber)"
+        }
+    }
+    
+    //5버튼 액션
+    @objc
+    private func fiveButtonTapped() {
+        if firstNumber == "0" {
+            firstNumber = "5"
+            label.text = "\(firstNumber)"
+        } else {
+            firstNumber += "5"
+            label.text = "\(firstNumber)"
+        }
+    }
+    
+    // 6버튼 액션
+    @objc
+    private func sixButtonTapped() {
+        if firstNumber == "0" {
+            firstNumber = "6"
+            label.text = "\(firstNumber)"
+        } else {
+            firstNumber += "6"
+            label.text = "\(firstNumber)"
+        }
+    }
+    
+    // 7버튼 액션
+    @objc
+    private func sevenButtonTapped() {
+        if firstNumber == "0" {
+            firstNumber = "7"
+            label.text = "\(firstNumber)"
+        } else {
+            firstNumber += "7"
+            label.text = "\(firstNumber)"
+        }
+    }
+    
+    // 8버튼 액션
+    @objc
+    private func eightButtonTapped() {
+        if firstNumber == "0" {
+            firstNumber = "8"
+            label.text = "\(firstNumber)"
+        } else {
+            firstNumber += "8"
+            label.text = "\(firstNumber)"
+        }
+    }
+    
+    // 9버튼 액션
+    @objc
+    private func nineButtonTapped() {
+        if firstNumber == "0" {
+            firstNumber = "9"
+            label.text = "\(firstNumber)"
+        } else {
+            firstNumber += "9"
+            label.text = "\(firstNumber)"
+        }
+    }
+    
+    // 0버튼 액션
+    @objc
+    private func zeroButtonTapped() {
+        if firstNumber == "0" {
+            firstNumber = "0"
+            label.text = "\(firstNumber)"
+        } else {
+            firstNumber += "0"
+            label.text = "\(firstNumber)"
+        }
+    }
+    
+    // 덧셈 버튼
+    @objc
+    private func plusButtonTapped() {
+        if firstNumber == "0" {
+            firstNumber = "+"
+            label.text = "error"
+        } else {
+            firstNumber += "+"
+            label.text = "\(firstNumber)"
+        }
+    }
+    
+    // 뺄셈 버튼
+    @objc
+    private func minusButtonTapped() {
+        if firstNumber == "0" {
+            firstNumber = "-"
+            label.text = "\(firstNumber)"
+        } else {
+            firstNumber += "-"
+            label.text = "\(firstNumber)"
+        }
+    }
+    
+    // 곱셈 버튼
+    @objc
+    private func multplyButtonTapped() {
+        if firstNumber == "0" {
+            firstNumber = "*"
+            label.text = "error"
+        } else {
+            firstNumber += "*"
+            label.text = "\(firstNumber)"
+        }
+    }
+    
+    // 나눗셈 버튼
+    @objc
+    private func dividButtonTapped() {
+        if firstNumber == "0" {
+            firstNumber = "/"
+            label.text = "error"
+        } else {
+            firstNumber += "/"
+            label.text = "\(firstNumber)"
+        }
+    }
+    
 
 }
 
+// 프리뷰
 #Preview {
   ViewController()
 }
