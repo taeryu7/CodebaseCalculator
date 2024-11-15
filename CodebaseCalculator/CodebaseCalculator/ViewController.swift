@@ -179,6 +179,7 @@ class ViewController: UIViewController {
         button.titleLabel?.font = .systemFont(ofSize: 30)
         button.backgroundColor = UIColor(red: 58/255, green: 58/255, blue: 58/255, alpha: 1.0)
         button.setTitleColor(.white, for: .normal)
+        button.layer.cornerRadius = 40
     }
     
     // 연산자 버튼 설정
@@ -187,6 +188,7 @@ class ViewController: UIViewController {
         button.titleLabel?.font = .systemFont(ofSize: 30)
         button.backgroundColor = UIColor(red: 255/255, green: 147/255, blue: 0/255, alpha: 1.0)
         button.setTitleColor(.white, for: .normal)
+        button.layer.cornerRadius = 40
     }
 
 }
