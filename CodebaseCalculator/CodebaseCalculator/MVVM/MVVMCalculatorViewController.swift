@@ -9,12 +9,12 @@ import UIKit
 import SnapKit
 
 /// 계산기의 UI를 담당하는 뷰컨트롤러
-class CalculatorViewController: UIViewController {
+class MVVMCalculatorViewController: UIViewController {
     
     // MARK: - Properties
     
     /// 계산기의 비즈니스 로직을 처리하는 뷰모델
-    private let viewModel = CalculatorViewModel()
+    private let viewModel = MVVMCalculatorViewModel()
     
     // MARK: - UI Components
     
@@ -248,5 +248,5 @@ class CalculatorViewController: UIViewController {
 
 // MARK: - Preview Provider
 #Preview {
-    CalculatorViewController()
+    MVVMCalculatorViewController()
 }

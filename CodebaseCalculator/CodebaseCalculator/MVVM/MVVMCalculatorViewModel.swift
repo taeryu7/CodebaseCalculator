@@ -8,7 +8,7 @@
 import Foundation
 
 /// 계산기의 비즈니스 로직을 처리하는 ViewModel
-class CalculatorViewModel {
+class MVVMCalculatorViewModel {
     // MARK: - Properties
     
     /// 화면에 표시될 텍스트가 변경될 때 호출되는 클로저
@@ -18,7 +18,7 @@ class CalculatorViewModel {
     
     /// 현재 계산기의 상태를 저장하는 모델
     /// - Note: 모델이 변경될 때마다 displayTextChanged 클로저를 통해 View에 알림
-    private var model: CalculatorModel = .initial() {
+    private var model: MVVMCalculatorModel = .initial() {
         didSet {
             displayTextChanged?(model.displayText)
         }
