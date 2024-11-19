@@ -4,9 +4,6 @@
 //
 //  Created by 유태호 on 11/19/24.
 //
-
-//class NewCalculator: UIViewController {
-
 //  Created by 유태호 on 11/19/24.
 //
 
