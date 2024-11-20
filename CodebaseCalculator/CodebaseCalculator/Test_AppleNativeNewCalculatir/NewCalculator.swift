@@ -109,11 +109,15 @@ class NewCalculator: UIViewController {
     ///   - title: 버튼에 표시될 텍스트
     private func setupButton(_ button: UIButton, title: String) {
         button.setTitle(title, for: .normal)
-        button.backgroundColor = UIColor(white: 0.23, alpha: 1.0)  // 어두운 회색 배경
+        button.backgroundColor = UIColor(white: 0.23, alpha: 1.0)
         button.setTitleColor(.white, for: .normal)
-        button.translatesAutoresizingMaskIntoConstraints = false
         button.titleLabel?.font = .systemFont(ofSize: 30)
-        button.layer.cornerRadius = 40
+        
+        // 버튼을 정사각형으로 만들기
+        button.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            button.widthAnchor.constraint(equalTo: button.heightAnchor)
+        ])
     }
     
     
@@ -127,8 +131,12 @@ class NewCalculator: UIViewController {
         button.titleLabel?.font = .systemFont(ofSize: 34)
         button.backgroundColor = color
         button.setTitleColor(.white, for: .normal)
+        
+        // 버튼을 정사각형으로 만들기
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.heightAnchor.constraint(equalTo: button.widthAnchor).isActive = true  // 정사각형 형태 유지
+        NSLayoutConstraint.activate([
+            button.widthAnchor.constraint(equalTo: button.heightAnchor)
+        ])
     }
     
     /// 모든 버튼의 크기와 모서리를 설정하는 메서드
@@ -136,28 +144,39 @@ class NewCalculator: UIViewController {
     private func layoutButtons() {
         let screenWidth = UIScreen.main.bounds.width
         let padding: CGFloat = 20
+        let numberOfButtonsPerRow: CGFloat = 4
         let spacing: CGFloat = 12
-        let availableWidth = screenWidth - (padding * 2) - (spacing * 3)
-        let buttonDiameter = availableWidth / 4  // 4개의 버튼이 한 줄에 들어가도록 계산
         
-        // 모든 버튼에 동일한 크기와 모서리 설정 적용
-        [resetButton, plusMinusButton, percentButton, dividButton,
-         sevenButton, eightButton, nineButton, multplyButton,
-         fourButton, fiveButton, sixButton, minusButton,
-         oneButton, twoButton, threeButton, plusButton,
-         zeroButton, zeroButton2, dotButton, equalButton].forEach { button in
-            button.widthAnchor.constraint(equalToConstant: buttonDiameter).isActive = true
-            button.heightAnchor.constraint(equalToConstant: buttonDiameter).isActive = true
-            button.layer.cornerRadius = buttonDiameter / 2
+        // 사용 가능한 너비에서 버튼 크기 계산
+        let availableWidth = screenWidth - (padding * 2) - (spacing * (numberOfButtonsPerRow - 1))
+        let buttonSize = floor(availableWidth / numberOfButtonsPerRow)  // 정수로 반올림
+        
+        let allButtons = [
+            resetButton, plusMinusButton, percentButton, dividButton,
+            sevenButton, eightButton, nineButton, multplyButton,
+            fourButton, fiveButton, sixButton, minusButton,
+            oneButton, twoButton, threeButton, plusButton,
+            zeroButton, zeroButton2, dotButton, equalButton
+        ]
+        
+        allButtons.forEach { button in
+            // 크기 제약조건 설정
+            button.widthAnchor.constraint(equalToConstant: buttonSize).isActive = true
+            button.heightAnchor.constraint(equalToConstant: buttonSize).isActive = true
+            
+            // 완벽한 원형으로 만들기
+            button.layer.cornerRadius = buttonSize / 2
             button.clipsToBounds = true
         }
     }
     
     /// 모든 버튼의 초기 설정을 수행하는 메서드
     private func setupButtons() {
-        // 숫자 버튼 설정
-        setupButton(zeroButton, title: "0")
-        setupButton(zeroButton2, title: "0")
+        let calculatorImage = UIImage(systemName: "calculator")?.withTintColor(.white, renderingMode: .alwaysOriginal)
+        zeroButton.setImage(calculatorImage, for: .normal)
+        zeroButton.backgroundColor = UIColor(white: 0.23, alpha: 1.0)
+        
+        setupButton(zeroButton2, title: "0")  // 두 번째 0 버튼
         setupButton(oneButton, title: "1")
         setupButton(twoButton, title: "2")
         setupButton(threeButton, title: "3")
@@ -185,12 +204,18 @@ class NewCalculator: UIViewController {
     
     /// 스택뷰들의 초기 설정을 수행하는 메서드
     private func setupStackViews() {
-        // 각 가로 스택뷰 설정
+        // 스택뷰들의 기본 설정
         [stackView, stackView1, stackView2, stackView3, stackView4].forEach {
             $0.axis = .horizontal
-            $0.spacing = 10
-            $0.distribution = .fillEqually
+            $0.spacing = 12  // 버튼 사이의 간격
+            $0.distribution = .equalSpacing  // 버튼들을 동일한 간격으로 배치
+            $0.alignment = .center  // 중앙 정렬
         }
+        
+        verticalStackView.axis = .vertical
+        verticalStackView.spacing = 12  // 행 사이의 간격
+        verticalStackView.distribution = .equalSpacing
+        verticalStackView.alignment = .fill
         
         // 첫번째 줄 (AC, +/-, %, ÷)
         stackView.addArrangedSubview(resetButton)
@@ -222,7 +247,7 @@ class NewCalculator: UIViewController {
         stackView4.addArrangedSubview(dotButton)
         stackView4.addArrangedSubview(equalButton)
         
-        // 수직 스택뷰에 추가
+        // 수직 스택뷰에 모든 행 추가
         verticalStackView.addArrangedSubview(stackView)
         verticalStackView.addArrangedSubview(stackView1)
         verticalStackView.addArrangedSubview(stackView2)
@@ -234,28 +259,25 @@ class NewCalculator: UIViewController {
         view.addSubview(verticalStackView)
     }
     
-    /// Auto Layout 제약조건을 설정하는 메서드
     private func setupConstraints() {
-        // 결과 레이블의 제약조건
         label.snp.makeConstraints {
-            $0.top.equalTo(view.safeAreaLayoutGuide).offset(20)
+            $0.top.equalTo(view.safeAreaLayoutGuide).offset(50)
             $0.leading.equalToSuperview().offset(20)
             $0.trailing.equalToSuperview().offset(-20)
-            $0.height.equalTo(120)
+            $0.height.equalTo(200)
         }
         
-        // 세로 스택뷰의 제약조건
         verticalStackView.snp.makeConstraints {
             $0.top.equalTo(label.snp.bottom).offset(20)
             $0.leading.equalToSuperview().offset(20)
             $0.trailing.equalToSuperview().offset(-20)
-            $0.bottom.equalTo(view.safeAreaLayoutGuide).offset(-20)
+            $0.bottom.equalTo(view.safeAreaLayoutGuide).offset(-30)
         }
     }
     
     /// 모든 버튼의 동작을 설정하는 메서드
     private func setupButtonActions() {
-        // 숫자 버튼 액션
+        zeroButton2.addTarget(self, action: #selector(numberButtonTapped(_:)), for: .touchUpInside)
         oneButton.addTarget(self, action: #selector(numberButtonTapped(_:)), for: .touchUpInside)
         twoButton.addTarget(self, action: #selector(numberButtonTapped(_:)), for: .touchUpInside)
         threeButton.addTarget(self, action: #selector(numberButtonTapped(_:)), for: .touchUpInside)
@@ -265,11 +287,9 @@ class NewCalculator: UIViewController {
         sevenButton.addTarget(self, action: #selector(numberButtonTapped(_:)), for: .touchUpInside)
         eightButton.addTarget(self, action: #selector(numberButtonTapped(_:)), for: .touchUpInside)
         nineButton.addTarget(self, action: #selector(numberButtonTapped(_:)), for: .touchUpInside)
-        zeroButton.addTarget(self, action: #selector(numberButtonTapped(_:)), for: .touchUpInside)
-        zeroButton2.addTarget(self, action: #selector(numberButtonTapped(_:)), for: .touchUpInside)
         dotButton.addTarget(self, action: #selector(dotButtonTapped), for: .touchUpInside)
         
-        // 연산자 버튼 액션
+        // 연산자 버튼 액션 (변경 없음)
         resetButton.addTarget(self, action: #selector(resetButtonTapped), for: .touchUpInside)
         plusMinusButton.addTarget(self, action: #selector(plusMinusButtonTapped), for: .touchUpInside)
         percentButton.addTarget(self, action: #selector(percentButtonTapped), for: .touchUpInside)
