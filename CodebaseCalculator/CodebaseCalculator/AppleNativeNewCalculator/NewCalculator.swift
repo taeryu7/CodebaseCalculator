@@ -172,7 +172,6 @@ class NewCalculator: UIViewController {
         let calConfig = UIImage.SymbolConfiguration(pointSize: 23, weight: .regular)
         let calImage = UIImage(systemName: "keyboard", withConfiguration: calConfig)?
             .withTintColor(.white, renderingMode: .alwaysOriginal)
-        
         config.image = calImage
         
         // 여백 및 크기 설정
