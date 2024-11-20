@@ -2,8 +2,8 @@
 //  NewCalculator.swift
 //  CodebaseCalculator
 //
-//  Created by 유태호 on 11/19/24.
-//
+//  iOS 계산기 앱을 구현한 뷰 컨트롤러
+//  기본적인 사칙연산과 함께 퍼센트, 부호 변경 등의 추가 기능을 제공
 //  Created by 유태호 on 11/19/24.
 //
 
@@ -12,19 +12,25 @@ import SnapKit
 
 class NewCalculator: UIViewController {
     
-    // MARK: - Properties
+    // MARK: - Properties (속성)
     /// 계산기에 표시되는 현재 숫자 또는 수식을 저장하는 변수
+    /// 사용자가 입력한 숫자나 계산식이 문자열 형태로 저장됨
     /// 초기값은 "0"으로 설정
     private var firstNumber = "0"
     
     /// 새로운 계산 시작 여부를 판단하는 플래그
     /// true일 경우 다음 숫자 입력 시 현재 표시된 숫자를 대체함
+    /// false일 경우 기존 숫자에 이어서 입력
+    /// 예: 계산 결과가 표시된 후 새로운 숫자를 입력할 때 사용
     private var isNewCalculation = false
     
-    // MARK: - UI Components
+    // MARK: - UI Components (UI 구성요소)
     /// 계산 결과를 표시하는 메인 레이블
-    /// - 흰색 텍스트, 80pt 크기의 light 웨이트 폰트 사용
-    /// - 우측 정렬, 자동 폰트 크기 조절 지원
+    /// 주요 특징:
+    /// - 흰색 텍스트 사용
+    /// - 80pt 크기의 light 웨이트 폰트
+    /// - 우측 정렬로 숫자 표시
+    /// - 긴 숫자도 표시할 수 있도록 자동 크기 조절
     private let label: UILabel = {
         let label = UILabel()
         label.textColor = .white
@@ -36,46 +42,48 @@ class NewCalculator: UIViewController {
         return label
     }()
     
-    // 계산기 버튼 UI 컴포넌트들
-    // 첫 번째 줄 버튼들
-    private let resetButton = UIButton()      // 모든 입력을 초기화하는 AC 버튼
-    private let plusMinusButton = UIButton()  // 양수/음수를 전환하는 +/- 버튼
-    private let percentButton = UIButton()    // 퍼센트 값으로 변환하는 % 버튼
-    private let dividButton = UIButton()      // 나누기 연산자 버튼
+    // MARK: - Buttons (버튼)
+    // 첫 번째 줄 버튼들 - 기능 버튼
+    private let resetButton = UIButton()      // AC: 모든 입력을 초기화
+    private let plusMinusButton = UIButton()  // +/-: 양수/음수 전환
+    private let percentButton = UIButton()    // %: 퍼센트 값으로 변환
+    private let dividButton = UIButton()      // ÷: 나누기 연산
     
-    // 두 번째 줄 버튼들
-    private let sevenButton = UIButton()      // 숫자 7 버튼
-    private let eightButton = UIButton()      // 숫자 8 버튼
-    private let nineButton = UIButton()       // 숫자 9 버튼
-    private let multplyButton = UIButton()    // 곱하기 연산자 버튼
+    // 두 번째 줄 버튼들 - 숫자 7,8,9와 곱하기
+    private let sevenButton = UIButton()      // 숫자 7
+    private let eightButton = UIButton()      // 숫자 8
+    private let nineButton = UIButton()       // 숫자 9
+    private let multplyButton = UIButton()    // ×: 곱하기 연산
     
-    // 세 번째 줄 버튼들
-    private let fourButton = UIButton()       // 숫자 4 버튼
-    private let fiveButton = UIButton()       // 숫자 5 버튼
-    private let sixButton = UIButton()        // 숫자 6 버튼
-    private let minusButton = UIButton()      // 빼기 연산자 버튼
+    // 세 번째 줄 버튼들 - 숫자 4,5,6과 빼기
+    private let fourButton = UIButton()       // 숫자 4
+    private let fiveButton = UIButton()       // 숫자 5
+    private let sixButton = UIButton()        // 숫자 6
+    private let minusButton = UIButton()      // −: 빼기 연산
     
-    // 네 번째 줄 버튼들
-    private let oneButton = UIButton()        // 숫자 1 버튼
-    private let twoButton = UIButton()        // 숫자 2 버튼
-    private let threeButton = UIButton()      // 숫자 3 버튼
-    private let plusButton = UIButton()       // 더하기 연산자 버튼
+    // 네 번째 줄 버튼들 - 숫자 1,2,3과 더하기
+    private let oneButton = UIButton()        // 숫자 1
+    private let twoButton = UIButton()        // 숫자 2
+    private let threeButton = UIButton()      // 숫자 3
+    private let plusButton = UIButton()       // +: 더하기 연산
     
-    // 다섯 번째 줄 버튼들
-    private let zeroButton = UIButton()       // 숫자 0 버튼 (왼쪽)
-    private let zeroButton2 = UIButton()      // 숫자 0 버튼 (오른쪽)
-    private let dotButton = UIButton()        // 소수점 버튼
-    private let equalButton = UIButton()      // 계산 결과를 표시하는 등호 버튼
+    // 다섯 번째 줄 버튼들 - 0, 소수점, 등호
+    private let zeroButton = UIButton()       // 계산기 아이콘 (왼쪽)
+    private let zeroButton2 = UIButton()      // 숫자 0 (가운데)
+    private let dotButton = UIButton()        // .: 소수점
+    private let equalButton = UIButton()      // =: 계산 실행
     
-    // 버튼들을 담을 스택뷰들
-    /// 각 행의 버튼들을 담는 가로 스택뷰
-    private let stackView = UIStackView()     // 첫 번째 줄 스택뷰
-    private let stackView1 = UIStackView()    // 두 번째 줄 스택뷰
-    private let stackView2 = UIStackView()    // 세 번째 줄 스택뷰
-    private let stackView3 = UIStackView()    // 네 번째 줄 스택뷰
-    private let stackView4 = UIStackView()    // 다섯 번째 줄 스택뷰
+    // MARK: - Stack Views (스택뷰)
+    /// 각 행의 버튼들을 담는 가로 스택뷰들
+    /// 버튼들을 수평으로 정렬하고 일정한 간격을 유지
+    private let stackView = UIStackView()     // 첫 번째 줄: AC, +/-, %, ÷
+    private let stackView1 = UIStackView()    // 두 번째 줄: 7, 8, 9, ×
+    private let stackView2 = UIStackView()    // 세 번째 줄: 4, 5, 6, −
+    private let stackView3 = UIStackView()    // 네 번째 줄: 1, 2, 3, +
+    private let stackView4 = UIStackView()    // 다섯 번째 줄: 아이콘, 0, ., =
     
     /// 모든 가로 스택뷰를 담는 세로 스택뷰
+    /// 특징:
     /// - 세로 방향으로 버튼들을 배치
     /// - 각 행 사이에 10pt 간격 유지
     /// - 모든 행이 동일한 높이를 가지도록 설정
@@ -87,14 +95,20 @@ class NewCalculator: UIViewController {
         return stackView
     }()
     
-    // MARK: - Lifecycle Methods
+    // MARK: - Lifecycle Methods (생명주기 메서드)
     override func viewDidLoad() {
         super.viewDidLoad()
         calculatorUI()  // UI 초기화 및 설정
     }
     
-    // MARK: - UI Setup Methods
+    // MARK: - UI Setup Methods (UI 설정 메서드)
     /// 계산기의 전체적인 UI를 설정하는 메서드
+    /// 실행 순서:
+    /// 1. 배경색 설정
+    /// 2. 버튼 설정
+    /// 3. 스택뷰 설정
+    /// 4. 제약조건 설정
+    /// 5. 버튼 레이아웃 설정
     private func calculatorUI() {
         view.backgroundColor = .black
         setupButtons()      // 버튼 설정
@@ -107,40 +121,69 @@ class NewCalculator: UIViewController {
     /// - Parameters:
     ///   - button: 스타일을 적용할 UIButton 인스턴스
     ///   - title: 버튼에 표시될 텍스트
+    /// Configuration을 사용하여 현대적인 버튼 스타일 적용
     private func setupButton(_ button: UIButton, title: String) {
-        button.setTitle(title, for: .normal)
-        button.backgroundColor = UIColor(white: 0.23, alpha: 1.0)
-        button.setTitleColor(.white, for: .normal)
-        button.titleLabel?.font = .systemFont(ofSize: 30)
+        var configuration = UIButton.Configuration.filled()
+        configuration.baseBackgroundColor = UIColor(white: 0.23, alpha: 1.0)  // 어두운 회색
+        configuration.baseForegroundColor = .white  // 흰색 텍스트
+        configuration.title = title
         
-        // 버튼을 정사각형으로 만들기
+        // 폰트 설정
+        configuration.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { incoming in
+            var outgoing = incoming
+            outgoing.font = .systemFont(ofSize: 30)
+            return outgoing
+        }
+        
+        button.configuration = configuration
         button.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            button.widthAnchor.constraint(equalTo: button.heightAnchor)
-        ])
     }
-    
     
     /// 특수 버튼(연산자, AC 등)의 스타일을 설정하는 메서드
     /// - Parameters:
     ///   - button: 스타일을 적용할 UIButton 인스턴스
     ///   - title: 버튼에 표시될 텍스트
-    ///   - color: 버튼의 배경색
+    ///   - color: 버튼의 배경색 (주황색 또는 회색)
     private func colorButton(_ button: UIButton, title: String, color: UIColor) {
-        button.setTitle(title, for: .normal)
-        button.titleLabel?.font = .systemFont(ofSize: 34)
-        button.backgroundColor = color
-        button.setTitleColor(.white, for: .normal)
+        var configuration = UIButton.Configuration.filled()
+        configuration.baseBackgroundColor = color
+        configuration.baseForegroundColor = .white
+        configuration.title = title
         
-        // 버튼을 정사각형으로 만들기
+        // 폰트 설정 (숫자 버튼보다 크게)
+        configuration.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { incoming in
+            var outgoing = incoming
+            outgoing.font = .systemFont(ofSize: 34)
+            return outgoing
+        }
+        
+        button.configuration = configuration
         button.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            button.widthAnchor.constraint(equalTo: button.heightAnchor)
-        ])
+    }
+    
+    /// 계산기 아이콘 버튼을 설정하는 메서드
+    /// zeroButton에 계산기 아이콘을 표시
+    private func setupCalculatorIconButton(_ button: UIButton) {
+        var config = UIButton.Configuration.filled()
+        config.baseBackgroundColor = UIColor(white: 0.23, alpha: 1.0)
+        config.baseForegroundColor = .white
+        
+        // 시스템 키보드 아이콘 설정
+        let calConfig = UIImage.SymbolConfiguration(pointSize: 23, weight: .regular)
+        let calImage = UIImage(systemName: "keyboard", withConfiguration: calConfig)?
+            .withTintColor(.white, renderingMode: .alwaysOriginal)
+        
+        config.image = calImage
+        
+        // 여백 및 크기 설정
+        config.contentInsets = NSDirectionalEdgeInsets(top: 12, leading: 12, bottom: 12, trailing: 12)
+        config.preferredSymbolConfigurationForImage = UIImage.SymbolConfiguration(scale: .medium)
+        
+        button.configuration = config
     }
     
     /// 모든 버튼의 크기와 모서리를 설정하는 메서드
-    /// 화면 크기에 따라 동적으로 버튼 크기를 계산
+    /// 화면 크기에 따라 동적으로 버튼 크기를 계산하여 적용
     private func layoutButtons() {
         let screenWidth = UIScreen.main.bounds.width
         let padding: CGFloat = 20
@@ -172,11 +215,11 @@ class NewCalculator: UIViewController {
     
     /// 모든 버튼의 초기 설정을 수행하는 메서드
     private func setupButtons() {
-        let calculatorImage = UIImage(systemName: "calculator")?.withTintColor(.white, renderingMode: .alwaysOriginal)
-        zeroButton.setImage(calculatorImage, for: .normal)
-        zeroButton.backgroundColor = UIColor(white: 0.23, alpha: 1.0)
+        // 계산기 아이콘 버튼 설정
+        setupCalculatorIconButton(zeroButton)
         
-        setupButton(zeroButton2, title: "0")  // 두 번째 0 버튼
+        // 숫자 버튼 설정
+        setupButton(zeroButton2, title: "0")
         setupButton(oneButton, title: "1")
         setupButton(twoButton, title: "2")
         setupButton(threeButton, title: "3")
@@ -198,20 +241,20 @@ class NewCalculator: UIViewController {
         colorButton(plusButton, title: "+", color: .systemOrange)
         colorButton(equalButton, title: "=", color: .systemOrange)
         
-        // 버튼 액션 설정
-        setupButtonActions()
+        setupButtonActions()  // 버튼 동작 설정
     }
     
     /// 스택뷰들의 초기 설정을 수행하는 메서드
     private func setupStackViews() {
         // 스택뷰들의 기본 설정
         [stackView, stackView1, stackView2, stackView3, stackView4].forEach {
-            $0.axis = .horizontal
-            $0.spacing = 12  // 버튼 사이의 간격
-            $0.distribution = .equalSpacing  // 버튼들을 동일한 간격으로 배치
-            $0.alignment = .center  // 중앙 정렬
+            $0.axis = .horizontal            // 가로 방향 정렬
+            $0.spacing = 12                  // 버튼 사이 간격
+            $0.distribution = .equalSpacing  // 균등 간격
+            $0.alignment = .center          // 중앙 정렬
         }
         
+        // 세로 스택뷰 설정
         verticalStackView.axis = .vertical
         verticalStackView.spacing = 12  // 행 사이의 간격
         verticalStackView.distribution = .equalSpacing
@@ -241,7 +284,7 @@ class NewCalculator: UIViewController {
         stackView3.addArrangedSubview(threeButton)
         stackView3.addArrangedSubview(plusButton)
         
-        // 다섯번째 줄 (0, 0, ., =)
+        // 다섯번째 줄 (아이콘, 0, ., =)
         stackView4.addArrangedSubview(zeroButton)
         stackView4.addArrangedSubview(zeroButton2)
         stackView4.addArrangedSubview(dotButton)
@@ -259,24 +302,30 @@ class NewCalculator: UIViewController {
         view.addSubview(verticalStackView)
     }
     
+    /// Auto Layout 제약조건을 설정하는 메서드
+    /// SnapKit을 사용하여 UI 요소들의 위치와 크기를 정의
     private func setupConstraints() {
+        // 결과 레이블의 제약조건
         label.snp.makeConstraints {
-            $0.top.equalTo(view.safeAreaLayoutGuide).offset(50)
-            $0.leading.equalToSuperview().offset(20)
-            $0.trailing.equalToSuperview().offset(-20)
-            $0.height.equalTo(200)
+            $0.top.equalTo(view.safeAreaLayoutGuide).offset(50)    // 상단 여백
+            $0.leading.equalToSuperview().offset(20)               // 좌측 여백
+            $0.trailing.equalToSuperview().offset(-20)             // 우측 여백
+            $0.height.equalTo(200)                                 // 높이 고정
         }
         
+        // 버튼 그리드(세로 스택뷰)의 제약조건
         verticalStackView.snp.makeConstraints {
-            $0.top.equalTo(label.snp.bottom).offset(20)
-            $0.leading.equalToSuperview().offset(20)
-            $0.trailing.equalToSuperview().offset(-20)
-            $0.bottom.equalTo(view.safeAreaLayoutGuide).offset(-30)
+            $0.top.equalTo(label.snp.bottom).offset(20)           // 레이블과의 간격
+            $0.leading.equalToSuperview().offset(20)              // 좌측 여백
+            $0.trailing.equalToSuperview().offset(-20)            // 우측 여백
+            $0.bottom.equalTo(view.safeAreaLayoutGuide).offset(-30) // 하단 여백
         }
     }
     
     /// 모든 버튼의 동작을 설정하는 메서드
+    /// 각 버튼에 대한 터치 이벤트 핸들러를 연결
     private func setupButtonActions() {
+        // 숫자 버튼들에 대한 액션 설정
         zeroButton2.addTarget(self, action: #selector(numberButtonTapped(_:)), for: .touchUpInside)
         oneButton.addTarget(self, action: #selector(numberButtonTapped(_:)), for: .touchUpInside)
         twoButton.addTarget(self, action: #selector(numberButtonTapped(_:)), for: .touchUpInside)
@@ -289,7 +338,7 @@ class NewCalculator: UIViewController {
         nineButton.addTarget(self, action: #selector(numberButtonTapped(_:)), for: .touchUpInside)
         dotButton.addTarget(self, action: #selector(dotButtonTapped), for: .touchUpInside)
         
-        // 연산자 버튼 액션 (변경 없음)
+        // 연산자 및 기능 버튼들에 대한 액션 설정
         resetButton.addTarget(self, action: #selector(resetButtonTapped), for: .touchUpInside)
         plusMinusButton.addTarget(self, action: #selector(plusMinusButtonTapped), for: .touchUpInside)
         percentButton.addTarget(self, action: #selector(percentButtonTapped), for: .touchUpInside)
@@ -300,31 +349,34 @@ class NewCalculator: UIViewController {
         equalButton.addTarget(self, action: #selector(equalButtonTapped), for: .touchUpInside)
     }
     
-    // MARK: - Button Actions
+    // MARK: - Button Action Methods (버튼 동작 메서드)
     /// 숫자 버튼이 탭되었을 때 호출되는 메서드
     /// - Parameter sender: 탭된 숫자 버튼
+    /// 숫자를 입력하거나 기존 숫자에 이어붙임
     @objc private func numberButtonTapped(_ sender: UIButton) {
-        // 현재 숫자가 0이거나 새로운 계산을 시작하는 경우, 입력된 숫자로 대체
         guard let number = sender.titleLabel?.text else { return }
+        
+        // 새로운 숫자 입력 시작 또는 0 대체
         if firstNumber == "0" || isNewCalculation {
             firstNumber = number
             isNewCalculation = false
-        // 기존 숫자에 새로운 숫자를 이어붙임
         } else {
+            // 기존 숫자에 새로운 숫자 이어붙이기
             firstNumber += number
         }
         label.text = firstNumber
     }
     
-    // 연산자 버튼이 탭되었을 때 호출되는 메서드
+    /// 연산자 버튼이 탭되었을 때 호출되는 메서드
     /// - Parameter sender: 탭된 연산자 버튼
+    /// 수식에 연산자를 추가하거나 에러를 표시
     @objc private func operatorButtonTapped(_ sender: UIButton) {
         guard let op = sender.titleLabel?.text else { return }
-        // 마지막 문자가 이미 연산자인 경우 에러 표시
+        
+        // 연산자 중복 입력 방지
         if isLastCharacterOperator() {
             label.text = "error"
         } else {
-            // 수식에 연산자 추가
             firstNumber += op
             label.text = firstNumber
             isNewCalculation = false
@@ -332,18 +384,23 @@ class NewCalculator: UIViewController {
     }
     
     /// 등호(=) 버튼이 탭되었을 때 호출되는 메서드
-    /// 현재까지 입력된 수식을 계산하고 결과를 표시
+    /// 입력된 수식을 계산하고 결과를 표시
     @objc private func equalButtonTapped() {
         if firstNumber == "0" {
             label.text = "error"
         } else if isLastCharacterOperator() {
-            // 마지막 문자가 연산자인 경우 에러 표시
+            // 연산자로 끝나는 수식은 계산 불가
             label.text = "error"
         } else {
             // 수식 계산 시도
             if let result = calculate(expression: firstNumber) {
-                label.text = "\(result)"
-                firstNumber = "\(result)"
+                // 결과 포맷팅: 정수는 소수점 제거, 소수는 그대로 표시
+                if result.truncatingRemainder(dividingBy: 1) == 0 {
+                    firstNumber = String(format: "%.0f", result)
+                } else {
+                    firstNumber = "\(result)"
+                }
+                label.text = firstNumber
                 isNewCalculation = true
             } else {
                 label.text = "error"
@@ -352,7 +409,7 @@ class NewCalculator: UIViewController {
     }
     
     /// AC(All Clear) 버튼이 탭되었을 때 호출되는 메서드
-    /// 모든 상태를 초기화
+    /// 모든 계산 상태를 초기화
     @objc private func resetButtonTapped() {
         firstNumber = "0"
         isNewCalculation = false
@@ -360,7 +417,7 @@ class NewCalculator: UIViewController {
     }
     
     /// +/- 버튼이 탭되었을 때 호출되는 메서드
-    /// 현재 숫자의 부호를 변경
+    /// 현재 숫자의 부호를 반전
     @objc private func plusMinusButtonTapped() {
         if let number = Double(firstNumber) {
             firstNumber = "\(-number)"
@@ -369,7 +426,7 @@ class NewCalculator: UIViewController {
     }
     
     /// % 버튼이 탭되었을 때 호출되는 메서드
-    /// 현재 숫자를 백분율(100으로 나눈 값)로 변환
+    /// 현재 숫자를 백분율로 변환 (100으로 나눔)
     @objc private func percentButtonTapped() {
         if let number = Double(firstNumber) {
             firstNumber = "\(number / 100)"
@@ -386,7 +443,8 @@ class NewCalculator: UIViewController {
         }
     }
     
-    // MARK: - Helper Methods
+    // MARK: - Helper Methods (보조 메서드)
+    
     /// 현재 수식의 마지막 문자가 연산자인지 확인하는 메서드
     /// - Returns: 마지막 문자가 연산자이면 true, 아니면 false
     private func isLastCharacterOperator() -> Bool {
@@ -397,21 +455,22 @@ class NewCalculator: UIViewController {
     
     /// 주어진 수식을 계산하는 메서드
     /// - Parameter expression: 계산할 수식 문자열
-    /// - Returns: 계산 결과값. 계산할 수 없는 경우 nil 반환
+    /// - Returns: 계산 결과값 (실패시 nil)
     private func calculate(expression: String) -> Double? {
-        // iOS에서 사용하는 연산자 기호를 계산 가능한 형태로 변환
+        // 수식에 사용된 연산자를 실제 계산 가능한 형태로 변환
         var expr = expression
         expr = expr.replacingOccurrences(of: "×", with: "*")  // 곱하기 기호 변환
         expr = expr.replacingOccurrences(of: "÷", with: "/")  // 나누기 기호 변환
         expr = expr.replacingOccurrences(of: "−", with: "-")  // 빼기 기호 변환
         
-        // NSExpression을 사용하여 수식 계산
+        // NSExpression을 사용하여 수식 계산 수행
         let mathExpression = NSExpression(format: expr)
         return mathExpression.expressionValue(with: nil, context: nil) as? Double
     }
 }
 
 // MARK: - Preview Provider
+/// SwiftUI 프리뷰를 위한 설정
 #Preview {
     NewCalculator()
 }
